@@ -11,7 +11,7 @@ import (
 
 // GET
 
-// Get all channels
+// GetAllChannels
 func GetAllChannels(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -32,19 +32,19 @@ func GetAllChannels(c *fiber.Ctx) error {
 	})
 }
 
-// Get channel by channelId
-func GetChannelByChannelId(c *fiber.Ctx) error {
+// GetChannelByChannelID
+func GetChannelByChannelID(c *fiber.Ctx) error {
 	db := database.DBConn
-	channelId := c.Params("channelId")
+	channelID := c.Params("channelID")
 
 	channel := new(models.Channel)
 
-	if err := db.First(&channel, channelId).Error; err != nil {
+	if err := db.First(&channel, channelID).Error; err != nil {
 		switch err.Error() {
 		case "record not found":
 			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
 				Success: false,
-				Message: fmt.Sprintf("Channel with ChannelID %v not found.", channelId),
+				Message: fmt.Sprintf("Channel with ChannelID %v not found.", channelID),
 				Data:    nil,
 			})
 		default:
@@ -58,13 +58,13 @@ func GetChannelByChannelId(c *fiber.Ctx) error {
 
 	return c.JSON(ResponseHTTP{
 		Success: true,
-		Message: "Success get user by UserId.",
+		Message: "Success get user by UserID.",
 		Data:    *channel,
 	})
 }
 
-// Get channel by id
-func GetChannelById(c *fiber.Ctx) error {
+// GetChannelByID
+func GetChannelByID(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
 	channel := new(models.Channel)
@@ -121,8 +121,8 @@ func CreateChannel(c *fiber.Ctx) error {
 
 // PUT
 
-// Update channel by id
-func UpdateChannelById(c *fiber.Ctx) error {
+// UpdateChannelByID
+func UpdateChannelByID(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
 

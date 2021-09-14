@@ -18,7 +18,7 @@ type ResponseHTTP struct {
 
 // GET
 
-// Get last message
+// GetLastMessage
 func GetLastMessage(c *fiber.Ctx) error {
 
 	db := database.DBConn
@@ -46,7 +46,7 @@ func GetLastMessage(c *fiber.Ctx) error {
 
 }
 
-// Get all messages
+// GetAllMessages
 func GetAllMessages(c *fiber.Ctx) error {
 
 	db := database.DBConn
@@ -68,19 +68,19 @@ func GetAllMessages(c *fiber.Ctx) error {
 	})
 }
 
-// Get messages from an user
+// GetMessagesByUser
 func GetMessagesByUser(c *fiber.Ctx) error {
-	userId := c.Params("userId")
+	userID := c.Params("userID")
 	db := database.DBConn
 
 	var messages []models.Message
 
-	if err := db.Joins("Join users ON users.id = messages.user_id AND users.user_id = ?", userId).Find(&messages).Error; err != nil {
+	if err := db.Joins("Join users ON users.id = messages.user_id AND users.user_id = ?", userID).Find(&messages).Error; err != nil {
 		switch err.Error() {
 		case "record not found":
 			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
 				Success: false,
-				Message: fmt.Sprintf("Message with UserId %v not found.", userId),
+				Message: fmt.Sprintf("Message with UserId %v not found.", userID),
 				Data:    nil,
 			})
 		default:
@@ -100,7 +100,7 @@ func GetMessagesByUser(c *fiber.Ctx) error {
 	})
 }
 
-// Get message by id
+// GetMessageById
 func GetMessageById(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBConn
@@ -134,7 +134,7 @@ func GetMessageById(c *fiber.Ctx) error {
 
 // POST
 
-// Create a new message
+// CreateNewMessage
 func CreateNewMessage(c *fiber.Ctx) error {
 	db := database.DBConn
 

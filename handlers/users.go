@@ -10,8 +10,8 @@ import (
 
 // GET
 
-// Get user by id
-func GetUserById(c *fiber.Ctx) error {
+// GetUserByID
+func GetUserByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBConn
 
@@ -32,9 +32,9 @@ func GetUserById(c *fiber.Ctx) error {
 	})
 }
 
-// Get user by userId
-func GetUserByUserId(c *fiber.Ctx) error {
-	userId := c.Params("userId")
+// GetUserByUserID
+func GetUserByUserID(c *fiber.Ctx) error {
+	userId := c.Params("userID")
 	db := database.DBConn
 
 	user := new(models.User)
@@ -56,7 +56,7 @@ func GetUserByUserId(c *fiber.Ctx) error {
 
 // POST
 
-// Create a new user
+// CreateNewUser
 func CreateNewUser(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -81,8 +81,8 @@ func CreateNewUser(c *fiber.Ctx) error {
 
 // PUT
 
-// Update user by id
-func UpdateUserById(c *fiber.Ctx) error {
+// UpdateUserByID
+func UpdateUserByID(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
 
@@ -111,14 +111,14 @@ func UpdateUserById(c *fiber.Ctx) error {
 	})
 }
 
-// Update user by userId
-func UpdateUserByUserId(c *fiber.Ctx) error {
+// UpdateUserByUserID
+func UpdateUserByUserID(c *fiber.Ctx) error {
 	db := database.DBConn
-	userId := c.Params("userId")
+	userID := c.Params("userID")
 
 	user := new(models.User)
 
-	if err := db.Where("users.user_id = ?", userId).First(&user).Error; err != nil {
+	if err := db.Where("users.user_id = ?", userID).First(&user).Error; err != nil {
 		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
 			Success: false,
 			Message: err.Error(),
@@ -141,7 +141,7 @@ func UpdateUserByUserId(c *fiber.Ctx) error {
 	})
 }
 
-// Update user in db
+// UpdateUser
 func UpdateUser(c *fiber.Ctx, u *models.User) error {
 	db := database.DBConn
 

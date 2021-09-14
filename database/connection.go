@@ -22,6 +22,7 @@ var (
 	port     string
 )
 
+// LoadVar
 func LoadVar() {
 	// Load the .env file
 	err := godotenv.Load()

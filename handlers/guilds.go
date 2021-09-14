@@ -11,7 +11,7 @@ import (
 
 // GET
 
-// Get all guilds
+// GetAllGuilds
 func GetAllGuilds(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -32,8 +32,8 @@ func GetAllGuilds(c *fiber.Ctx) error {
 	})
 }
 
-// Get guild by id
-func GetGuildById(c *fiber.Ctx) error {
+// GetGuildByID
+func GetGuildByID(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
 	guild := new(models.Guild)
@@ -63,19 +63,19 @@ func GetGuildById(c *fiber.Ctx) error {
 
 }
 
-// Get guild by guildId
-func GetGuildByGuildId(c *fiber.Ctx) error {
+// GetGuildByGuildID
+func GetGuildByGuildID(c *fiber.Ctx) error {
 	db := database.DBConn
-	guildId := c.Params("guildId")
+	guildID := c.Params("guildID")
 
 	guild := new(models.Guild)
 
-	if err := db.First(&guild, guildId).Error; err != nil {
+	if err := db.First(&guild, guildID).Error; err != nil {
 		switch err.Error() {
 		case "record not found":
 			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
 				Success: false,
-				Message: fmt.Sprintf("Guild with GuildID %v not found.", guildId),
+				Message: fmt.Sprintf("Guild with GuildID %v not found.", guildID),
 				Data:    nil,
 			})
 		default:
@@ -121,8 +121,8 @@ func CreateGuild(c *fiber.Ctx) error {
 
 // PUT
 
-// Update guild by id
-func UpdateGuildById(c *fiber.Ctx) error {
+// UpdateGuildByID
+func UpdateGuildByID(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
 
