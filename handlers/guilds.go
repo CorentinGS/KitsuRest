@@ -9,6 +9,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GET
+
+// Get all guilds
 func GetAllGuilds(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -29,6 +32,38 @@ func GetAllGuilds(c *fiber.Ctx) error {
 	})
 }
 
+// Get guild by id
+func GetGuildById(c *fiber.Ctx) error {
+	db := database.DBConn
+	id := c.Params("id")
+	guild := new(models.Guild)
+
+	if err := db.First(&guild, id).Error; err != nil {
+		switch err.Error() {
+		case "record not found":
+			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
+				Success: false,
+				Message: fmt.Sprintf("Guild with ID %v not found.", id),
+				Data:    nil,
+			})
+		default:
+			return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+				Success: false,
+				Message: err.Error(),
+				Data:    nil,
+			})
+
+		}
+	}
+	return c.JSON(ResponseHTTP{
+		Success: true,
+		Message: fmt.Sprintf("Get guild by ID %v", id),
+		Data:    *guild,
+	})
+
+}
+
+// Get guild by guildId
 func GetGuildByGuildId(c *fiber.Ctx) error {
 	db := database.DBConn
 	guildId := c.Params("guildId")
@@ -59,6 +94,9 @@ func GetGuildByGuildId(c *fiber.Ctx) error {
 	})
 }
 
+// POST
+
+// Create a new guild
 func CreateGuild(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -81,6 +119,9 @@ func CreateGuild(c *fiber.Ctx) error {
 	})
 }
 
+// PUT
+
+// Update guild by id
 func UpdateGuildById(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
@@ -110,34 +151,4 @@ func UpdateGuildById(c *fiber.Ctx) error {
 		Message: "Success update guild by Id.",
 		Data:    *guild,
 	})
-}
-
-func GetGuildById(c *fiber.Ctx) error {
-	db := database.DBConn
-	id := c.Params("id")
-	guild := new(models.Guild)
-
-	if err := db.First(&guild, id).Error; err != nil {
-		switch err.Error() {
-		case "record not found":
-			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
-				Success: false,
-				Message: fmt.Sprintf("Guild with ID %v not found.", id),
-				Data:    nil,
-			})
-		default:
-			return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
-				Success: false,
-				Message: err.Error(),
-				Data:    nil,
-			})
-
-		}
-	}
-	return c.JSON(ResponseHTTP{
-		Success: true,
-		Message: fmt.Sprintf("Get guild by ID %v", id),
-		Data:    *guild,
-	})
-
 }

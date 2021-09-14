@@ -8,6 +8,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GET
+
+// Get user by id
 func GetUserById(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBConn
@@ -29,6 +32,31 @@ func GetUserById(c *fiber.Ctx) error {
 	})
 }
 
+// Get user by userId
+func GetUserByUserId(c *fiber.Ctx) error {
+	userId := c.Params("userId")
+	db := database.DBConn
+
+	user := new(models.User)
+
+	if err := db.Where("users.user_id = ?", userId).First(&user).Error; err != nil {
+		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+			Success: false,
+			Message: err.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.JSON(ResponseHTTP{
+		Success: true,
+		Message: "Success get user by UserId.",
+		Data:    *user,
+	})
+}
+
+// POST
+
+// Create a new user
 func CreateNewUser(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -51,6 +79,9 @@ func CreateNewUser(c *fiber.Ctx) error {
 	})
 }
 
+// PUT
+
+// Update user by id
 func UpdateUserById(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
@@ -80,6 +111,7 @@ func UpdateUserById(c *fiber.Ctx) error {
 	})
 }
 
+// Update user by userId
 func UpdateUserByUserId(c *fiber.Ctx) error {
 	db := database.DBConn
 	userId := c.Params("userId")
@@ -109,6 +141,7 @@ func UpdateUserByUserId(c *fiber.Ctx) error {
 	})
 }
 
+// Update user in db
 func UpdateUser(c *fiber.Ctx, u *models.User) error {
 	db := database.DBConn
 
@@ -123,26 +156,4 @@ func UpdateUser(c *fiber.Ctx, u *models.User) error {
 	db.Save(u)
 
 	return nil
-
-}
-
-func GetUserByUserId(c *fiber.Ctx) error {
-	userId := c.Params("userId")
-	db := database.DBConn
-
-	user := new(models.User)
-
-	if err := db.Where("users.user_id = ?", userId).First(&user).Error; err != nil {
-		return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
-			Success: false,
-			Message: err.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.JSON(ResponseHTTP{
-		Success: true,
-		Message: "Success get user by UserId.",
-		Data:    *user,
-	})
 }

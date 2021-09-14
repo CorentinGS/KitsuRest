@@ -9,12 +9,66 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Response Struct
 type ResponseHTTP struct {
 	Success bool        `json:"sucess"`
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 }
 
+// GET
+
+// Get last message
+func GetLastMessage(c *fiber.Ctx) error {
+
+	db := database.DBConn
+
+	var message models.Message
+	var author models.User
+
+	if res := db.Last(&message); res.Error != nil {
+		return c.JSON(ResponseHTTP{
+			Success: false,
+			Message: "Get last message",
+			Data:    nil,
+		})
+	}
+	db.Where("id = ?", message.UserID).First(&author)
+
+	return c.JSON(ResponseHTTP{
+		Success: true,
+		Message: "Get last message",
+		Data: fiber.Map{
+			"Messages": message,
+			"Author":   author,
+		},
+	})
+
+}
+
+// Get all messages
+func GetAllMessages(c *fiber.Ctx) error {
+
+	db := database.DBConn
+
+	var messages []models.Message
+
+	if res := db.Find(&messages); res.Error != nil {
+
+		return c.JSON(ResponseHTTP{
+			Success: false,
+			Message: "Get All messages",
+			Data:    nil,
+		})
+	}
+	return c.JSON(ResponseHTTP{
+		Success: true,
+		Message: "Get All messages",
+		Data:    messages,
+	})
+}
+
+// Get messages from an user
 func GetMessagesByUser(c *fiber.Ctx) error {
 	userId := c.Params("userId")
 	db := database.DBConn
@@ -46,6 +100,7 @@ func GetMessagesByUser(c *fiber.Ctx) error {
 	})
 }
 
+// Get message by id
 func GetMessageById(c *fiber.Ctx) error {
 	id := c.Params("id")
 	db := database.DBConn
@@ -77,6 +132,9 @@ func GetMessageById(c *fiber.Ctx) error {
 
 }
 
+// POST
+
+// Create a new message
 func CreateNewMessage(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -98,53 +156,4 @@ func CreateNewMessage(c *fiber.Ctx) error {
 		Data:    *message,
 	})
 
-}
-
-func GetLastMessage(c *fiber.Ctx) error {
-
-	db := database.DBConn
-
-	var message models.Message
-	var author models.User
-
-	if res := db.Last(&message); res.Error != nil {
-		return c.JSON(ResponseHTTP{
-			Success: false,
-			Message: "Get last message",
-			Data:    nil,
-		})
-	}
-	db.Where("id = ?", message.UserID).First(&author)
-
-	return c.JSON(ResponseHTTP{
-		Success: true,
-		Message: "Get last message",
-		Data: fiber.Map{
-			"Messages": message,
-			"Author":   author,
-		},
-	})
-
-}
-
-
-func GetAllMessages(c *fiber.Ctx) error {
-
-	db := database.DBConn
-
-	var messages []models.Message
-
-	if res := db.Find(&messages); res.Error != nil {
-
-		return c.JSON(ResponseHTTP{
-			Success: false,
-			Message: "Get All messages",
-			Data:    nil,
-		})
-	}
-	return c.JSON(ResponseHTTP{
-		Success: true,
-		Message: "Get All messages",
-		Data:    messages,
-	})
 }

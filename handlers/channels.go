@@ -9,6 +9,9 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GET
+
+// Get all channels
 func GetAllChannels(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -29,6 +32,7 @@ func GetAllChannels(c *fiber.Ctx) error {
 	})
 }
 
+// Get channel by channelId
 func GetChannelByChannelId(c *fiber.Ctx) error {
 	db := database.DBConn
 	channelId := c.Params("channelId")
@@ -59,6 +63,40 @@ func GetChannelByChannelId(c *fiber.Ctx) error {
 	})
 }
 
+// Get channel by id
+func GetChannelById(c *fiber.Ctx) error {
+	db := database.DBConn
+	id := c.Params("id")
+	channel := new(models.Channel)
+
+	if err := db.First(&channel, id).Error; err != nil {
+		switch err.Error() {
+		case "record not found":
+			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
+				Success: false,
+				Message: fmt.Sprintf("Channel with ID %v not found.", id),
+				Data:    nil,
+			})
+		default:
+			return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
+				Success: false,
+				Message: err.Error(),
+				Data:    nil,
+			})
+
+		}
+	}
+	return c.JSON(ResponseHTTP{
+		Success: true,
+		Message: fmt.Sprintf("Get channel by ID %v", id),
+		Data:    *channel,
+	})
+
+}
+
+// POST
+
+// Create a new channel
 func CreateChannel(c *fiber.Ctx) error {
 	db := database.DBConn
 
@@ -81,6 +119,9 @@ func CreateChannel(c *fiber.Ctx) error {
 	})
 }
 
+// PUT
+
+// Update channel by id
 func UpdateChannelById(c *fiber.Ctx) error {
 	db := database.DBConn
 	id := c.Params("id")
@@ -110,34 +151,4 @@ func UpdateChannelById(c *fiber.Ctx) error {
 		Message: "Success update channel by Id.",
 		Data:    *channel,
 	})
-}
-
-func GetChannelById(c *fiber.Ctx) error {
-	db := database.DBConn
-	id := c.Params("id")
-	channel := new(models.Channel)
-
-	if err := db.First(&channel, id).Error; err != nil {
-		switch err.Error() {
-		case "record not found":
-			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
-				Success: false,
-				Message: fmt.Sprintf("Channel with ID %v not found.", id),
-				Data:    nil,
-			})
-		default:
-			return c.Status(http.StatusServiceUnavailable).JSON(ResponseHTTP{
-				Success: false,
-				Message: err.Error(),
-				Data:    nil,
-			})
-
-		}
-	}
-	return c.JSON(ResponseHTTP{
-		Success: true,
-		Message: fmt.Sprintf("Get channel by ID %v", id),
-		Data:    *channel,
-	})
-
 }
