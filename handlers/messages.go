@@ -11,7 +11,7 @@ import (
 
 // Response Struct
 type ResponseHTTP struct {
-	Success bool        `json:"sucess"`
+	Success bool        `json:"success"`
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 }

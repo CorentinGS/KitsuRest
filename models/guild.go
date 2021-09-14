@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Guild structure 
+// Guild structure
 type Guild struct {
 	gorm.Model
 	GuildID   string `json:"guild_id" example:"879730620157292636"`

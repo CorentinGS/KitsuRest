@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// Channel structure 
+// Channel structure
 type Channel struct {
 	gorm.Model
 	GuildID     uint   `json:"guild_id" example:"1"`
