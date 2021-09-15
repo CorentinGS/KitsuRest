@@ -16,3 +16,4 @@
 .env
 docker-compose.yml
 workspace.code-workspace
+kitsurest
