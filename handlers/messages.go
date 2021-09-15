@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// Response Struct
+// ResponseHTTP Struct
 type ResponseHTTP struct {
 	Success bool        `json:"success"`
 	Data    interface{} `json:"data"`
