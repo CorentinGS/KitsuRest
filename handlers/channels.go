@@ -39,7 +39,7 @@ func GetChannelByChannelID(c *fiber.Ctx) error {
 
 	channel := new(models.Channel)
 
-	if err := db.First(&channel, channelID).Error; err != nil {
+	if err := db.Where("channels.channel_id = ?", channelID).First(&channel).Error; err != nil {
 		switch err.Error() {
 		case "record not found":
 			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{

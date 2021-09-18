@@ -70,7 +70,7 @@ func GetGuildByGuildID(c *fiber.Ctx) error {
 
 	guild := new(models.Guild)
 
-	if err := db.First(&guild, guildID).Error; err != nil {
+	if err := db.Where("guilds.guild_id = ?", guildID).First(&guild).Error; err != nil {
 		switch err.Error() {
 		case "record not found":
 			return c.Status(http.StatusNotFound).JSON(ResponseHTTP{
