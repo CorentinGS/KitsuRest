@@ -22,6 +22,6 @@ func main() {
 
 	// Create the app
 	app := routes.New()
-	// Listen to port 3000
-	log.Fatal(app.Listen(":3000"))
+	// Listen to port 1812
+	log.Fatal(app.Listen(":1812"))
 }
